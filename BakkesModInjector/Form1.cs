@@ -13,11 +13,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Timers;
+using System.Runtime.InteropServices;
 
 namespace BakkesModInjector
 {
     public partial class Form1 : Form
     {
+        private bool isFirstRun = false;
         private Object injectionLock = new Object();
         Boolean isInjected = false;
         Boolean startedAfterTrainer = false;
@@ -50,19 +52,19 @@ namespace BakkesModInjector
 
         void injectDLL()
         {
-            DllInjectionResult result = DllInjector.GetInstance.Inject("RocketLeague", bakkesModDirectory + "\\" + "bakkesmod.dll");
+            DLLInjectionResult result = DllInjector.Instance.Inject("RocketLeague", bakkesModDirectory + "\\" + "bakkesmod.dll");
             switch (result)
             {
-                case DllInjectionResult.DllNotFound:
+                case DLLInjectionResult.DLL_NOT_FOUND:
                     InjectionStatus = StatusStrings.INSTALLATION_WRONG;
                     break;
-                case DllInjectionResult.GameProcessNotFound:
+                case DLLInjectionResult.GAME_PROCESS_NOT_FOUND:
                     InjectionStatus = StatusStrings.PROCESS_NOT_ACTIVE;
                     break;
-                case DllInjectionResult.InjectionFailed:
+                case DLLInjectionResult.INJECTION_FAILED:
                     InjectionStatus = StatusStrings.INJECTION_FAILED;
                     break;
-                case DllInjectionResult.Success:
+                case DLLInjectionResult.SUCCESS:
                     InjectionStatus = StatusStrings.INJECTED;
                     isInjected = true;
                     break;
@@ -74,10 +76,17 @@ namespace BakkesModInjector
             bool isRunning = Process.GetProcessesByName("RocketLeague").Length > 0;
             if (injectNextTick)
             {
-            //Do injection
+                //Do injection
+                Process rocketLeagueProcess = Process.GetProcessesByName("RocketLeague").First();
+                if (!rocketLeagueProcess.Responding)
+                {
+                    processCheckTimer.Interval = 9000;
+                    return;
+                }
                 injectDLL();
                 injectNextTick = false;
                 processCheckTimer.Interval = 2000;
+                
             }
             else if (isRunning)
             {
@@ -85,11 +94,12 @@ namespace BakkesModInjector
                 {
                     if(startedAfterTrainer)
                     {
-                        processCheckTimer.Interval = 5000;
+                        processCheckTimer.Interval = 8000;
                         injectNextTick = true;
                         //Give 5 seconds for RL to start
                         InjectionStatus = StatusStrings.WAITING_FOR_LOAD;
-                        startedAfterTrainer = false;
+                        //startedAfterTrainer = false;
+
                     }
                     else
                     {
@@ -143,18 +153,19 @@ namespace BakkesModInjector
             }
             rocketLeagueDirectory = filePath.Substring(0, filePath.LastIndexOf("\\") + 1);
             bakkesModDirectory = rocketLeagueDirectory + "bakkesmod\\";
-            if (Directory.Exists(bakkesModDirectory))
+            if (!Directory.Exists(bakkesModDirectory))
             {
-                Directory.Delete(bakkesModDirectory, true);
+                //Directory.Delete(bakkesModDirectory, true);
+                Directory.CreateDirectory(bakkesModDirectory);
             }
-            Directory.CreateDirectory(bakkesModDirectory);
+            
             
             Registry.SetValue(REGISTRY_BASE_DIR, REGISTRY_ROCKET_LEAGUE_PATH, rocketLeagueDirectory);
             Registry.SetValue(REGISTRY_BASE_DIR, REGISTRY_BAKKESMOD_PATH, bakkesModDirectory);
 
             if (!File.Exists(BAKKESMOD_FILES_ZIP_DIR))
             {
-                MessageBox.Show("Unable to find bminstall.zip. Either include this file or press \"yes\" on the next screen.");
+                isFirstRun = true;
                 return;
             }
 
@@ -202,9 +213,17 @@ namespace BakkesModInjector
             {
                 var version = File.ReadAllLines(bakkesModDirectory + "\\" + "version.txt").Select(txt => new { Version = txt }).First();
                 versionText = version.Version;
+            } else
+            {
+                isFirstRun = true;
             }
             Updater u = new Updater(versionText);
             UpdateResult res = u.CheckForUpdates();
+            if(u.IsBlocked())
+            {
+                MessageBox.Show("Access denied, contact the developer");
+                Application.Exit();
+            }
             if(res == UpdateResult.ServerOffline)
             {
                 MessageBox.Show("Could not connect to update server.");
@@ -214,10 +233,9 @@ namespace BakkesModInjector
             }
             else if(res == UpdateResult.UpdateAvailable)
             {
-                DialogResult dialogResult = MessageBox.Show("An update is available. \r\nMessage: " + u.GetUpdateMessage() + "\r\nWould you like to update?", "Update", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
+                if (isFirstRun)
                 {
-                    if(File.Exists(updaterStorePath))
+                    if (File.Exists(updaterStorePath))
                     {
                         File.Delete(updaterStorePath);
                     }
@@ -226,9 +244,23 @@ namespace BakkesModInjector
                     updater.RunWorkerAsync();
                     return;
                 }
-                else if (dialogResult == DialogResult.No)
-                {
-                    MessageBox.Show("Alright. The tool might be broken now though. Updating is recommended!");
+                else {
+                    DialogResult dialogResult = MessageBox.Show("An update is available. \r\nMessage: " + u.GetUpdateMessage() + "\r\nWould you like to update?", "Update", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        if (File.Exists(updaterStorePath))
+                        {
+                            File.Delete(updaterStorePath);
+                        }
+                        downloadUpdateUrl = u.GetUpdateURL();
+                        InjectionStatus = StatusStrings.DOWNLOADING_UPDATE;
+                        updater.RunWorkerAsync();
+                        return;
+                    }
+                    else if (dialogResult == DialogResult.No)
+                    {
+                        MessageBox.Show("Alright. The tool might be broken now though. Updating is recommended!");
+                    }
                 }
             }
             processCheckTimer.Start();
@@ -239,7 +271,6 @@ namespace BakkesModInjector
             processCheckTimer = new System.Timers.Timer(2000);
             processCheckTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
             checkForInstall();
-            checkForUpdates();
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -291,12 +322,28 @@ namespace BakkesModInjector
             //    Application.Exit();
             //    return;
             //}
+            if (isFirstRun) {
+                string readme = bakkesModDirectory + "\\readme.txt";
+                if (File.Exists(readme))
+                {
+                    DialogResult dialogResult = MessageBox.Show("It looks like this is your first time, would you like to open the readme?", "BakkesMod", MessageBoxButtons.YesNo);
+                    if(dialogResult == DialogResult.Yes)
+                    {
+                        Process.Start(readme);
+                    }
+                } 
+           }
             processCheckTimer.Start();
         }
 
         private void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
         {
             downloadProgressBar.Invoke((Action)(() => downloadProgressBar.Value = e.ProgressPercentage));
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            checkForUpdates();
         }
     }
 

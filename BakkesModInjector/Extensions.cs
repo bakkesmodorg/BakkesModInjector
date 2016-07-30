@@ -56,7 +56,7 @@ namespace BakkesModInjector
                     continue;
                 }
                 //skip cfgs
-                if (completeFileName.ToLower().EndsWith(".cfg"))
+                if (completeFileName.ToLower().EndsWith(".cfg") || completeFileName.ToLower().EndsWith(".json"))
                 {
                     if (File.Exists(completeFileName))
                         continue;

@@ -18,7 +18,7 @@ namespace BakkesModInjector
 
     class Updater
     {
-        private static readonly string UPDATE_URL = "http://149.210.150.107:8000/updater/";
+        private static readonly string UPDATE_URL = "http://149.210.150.107/updater/";
         private string _currentVersion;
         private JObject latestResult = null;
         public Updater(string currentVersion)
@@ -37,7 +37,7 @@ namespace BakkesModInjector
                 {
                     //wc.DownloadFile(UPDATE_URL + _currentVersion + "/", "test.txt");
                     wc.Proxy = null;
-                    wc.Headers.Add("user-agent", "BakkesMod Updater (1.0)");
+                    wc.Headers.Add("user-agent", "BakkesMod Updater (1.0) Skis");
                     string fullUrl = UPDATE_URL + _currentVersion + "/";
                     var json = wc.DownloadString(fullUrl);
                     
@@ -61,6 +61,11 @@ namespace BakkesModInjector
         public String GetUpdateURL()
         {
             return (String)((JObject)latestResult["update_info"])["download_url"];
+        }
+
+        public bool IsBlocked()
+        {
+            return (latestResult["blocked"] != null && (bool)latestResult["blocked"]);
         }
 
     }
