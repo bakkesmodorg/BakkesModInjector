@@ -447,6 +447,56 @@ namespace BakkesModInjector
                 MessageBox.Show("BakkesMod folder does not exist. (Did you delete it?)");
             }
         }
+
+        private void bakkesModWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://bakkesmod.com");
+        }
+
+        private void bakkesModWorkshopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://workshop.bakkesmod.com/maps/playlists/");
+        }
+
+
+        static string PYTHON_DOWNLOAD = Path.GetTempPath() + "\\python_bm.zip";
+        private void installPythonSupportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string libs_dir = rocketLeagueDirectory + "bakkesmod\\libs\\";
+            if(File.Exists(libs_dir + "python36.dll") && File.Exists(libs_dir + "python36.zip"))
+            {
+                DialogResult continueDownload = MessageBox.Show("It looks like python for BakkesMod is already installed, would you like to reinstall?", "Continue python download", MessageBoxButtons.YesNo);
+                if (continueDownload != DialogResult.Yes)
+                    return;
+            }
+            string download_url = "https://www.python.org/ftp/python/3.6.3/python-3.6.3-embed-win32.zip";
+            downloadProgressBar.Invoke((Action)(() => downloadProgressBar.Visible = true));
+            using (WebClient wc = new WebClient())
+            {
+                wc.DownloadProgressChanged += python_DownloadProgressChanged;
+                wc.DownloadFileAsync(new System.Uri(download_url), Path.GetTempPath() + "\\python_bm.zip");
+                wc.DownloadFileCompleted += python_Downloaded;
+            }
+        }
+
+        private void python_Downloaded(object sender, AsyncCompletedEventArgs e)
+        {
+            downloadProgressBar.Invoke((Action)(() => downloadProgressBar.Visible = false));
+            string libs_dir = rocketLeagueDirectory + "bakkesmod\\libs\\";
+            using (FileStream zipToOpen = new FileStream(PYTHON_DOWNLOAD, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                {
+                    archive.ExtractToDirectory(libs_dir, true);
+                }
+            }
+        }
+
+        private void python_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            
+            downloadProgressBar.Invoke((Action)(() => downloadProgressBar.Value = e.ProgressPercentage));
+        }
     }
 
 

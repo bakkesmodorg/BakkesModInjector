@@ -39,12 +39,16 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reinstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openBakkesModFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.linksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bakkesModWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bakkesModWorkshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideWhenMinimizedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.openBakkesModFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.installPythonSupportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -89,6 +93,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.linksToolStripMenuItem,
             this.settingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -99,6 +104,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.installPythonSupportToolStripMenuItem,
             this.reinstallToolStripMenuItem,
             this.openBakkesModFolderToolStripMenuItem,
             this.exitToolStripMenuItem});
@@ -113,12 +119,42 @@
             this.reinstallToolStripMenuItem.Text = "Reinstall";
             this.reinstallToolStripMenuItem.Click += new System.EventHandler(this.reinstallToolStripMenuItem_Click);
             // 
+            // openBakkesModFolderToolStripMenuItem
+            // 
+            this.openBakkesModFolderToolStripMenuItem.Name = "openBakkesModFolderToolStripMenuItem";
+            this.openBakkesModFolderToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.openBakkesModFolderToolStripMenuItem.Text = "Open BakkesMod folder";
+            this.openBakkesModFolderToolStripMenuItem.Click += new System.EventHandler(this.openBakkesModFolderToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click_1);
+            // 
+            // linksToolStripMenuItem
+            // 
+            this.linksToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bakkesModWebsiteToolStripMenuItem,
+            this.bakkesModWorkshopToolStripMenuItem});
+            this.linksToolStripMenuItem.Name = "linksToolStripMenuItem";
+            this.linksToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.linksToolStripMenuItem.Text = "Links";
+            // 
+            // bakkesModWebsiteToolStripMenuItem
+            // 
+            this.bakkesModWebsiteToolStripMenuItem.Name = "bakkesModWebsiteToolStripMenuItem";
+            this.bakkesModWebsiteToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.bakkesModWebsiteToolStripMenuItem.Text = "BakkesMod website";
+            this.bakkesModWebsiteToolStripMenuItem.Click += new System.EventHandler(this.bakkesModWebsiteToolStripMenuItem_Click);
+            // 
+            // bakkesModWorkshopToolStripMenuItem
+            // 
+            this.bakkesModWorkshopToolStripMenuItem.Name = "bakkesModWorkshopToolStripMenuItem";
+            this.bakkesModWorkshopToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.bakkesModWorkshopToolStripMenuItem.Text = "BakkesMod workshop";
+            this.bakkesModWorkshopToolStripMenuItem.Click += new System.EventHandler(this.bakkesModWorkshopToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -150,12 +186,12 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
-            // openBakkesModFolderToolStripMenuItem
+            // installPythonSupportToolStripMenuItem
             // 
-            this.openBakkesModFolderToolStripMenuItem.Name = "openBakkesModFolderToolStripMenuItem";
-            this.openBakkesModFolderToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.openBakkesModFolderToolStripMenuItem.Text = "Open BakkesMod folder";
-            this.openBakkesModFolderToolStripMenuItem.Click += new System.EventHandler(this.openBakkesModFolderToolStripMenuItem_Click);
+            this.installPythonSupportToolStripMenuItem.Name = "installPythonSupportToolStripMenuItem";
+            this.installPythonSupportToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.installPythonSupportToolStripMenuItem.Text = "Install python support";
+            this.installPythonSupportToolStripMenuItem.Click += new System.EventHandler(this.installPythonSupportToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -197,6 +233,10 @@
         private System.Windows.Forms.ToolStripMenuItem reinstallToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openBakkesModFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem linksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bakkesModWebsiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bakkesModWorkshopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem installPythonSupportToolStripMenuItem;
     }
 }
 
