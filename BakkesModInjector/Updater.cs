@@ -63,6 +63,11 @@ namespace BakkesModInjector
             return (String)((JObject)latestResult["update_info"])["download_url"];
         }
 
+        public String GetSafeVersion()
+        {
+            return "171122.51667.178784";
+        }
+
         public bool IsBlocked()
         {
             return (latestResult["blocked"] != null && (bool)latestResult["blocked"]);

@@ -25,12 +25,15 @@ namespace BakkesModInjector
         Boolean startedAfterTrainer = false;
         bool injectNextTick = false;
         string updaterStorePath = Path.GetTempPath() + "\\bmupdate.zip";
+
+        string safeVersion = "";
         string downloadUpdateUrl;
         string rocketLeagueDirectory;
         string bakkesModDirectory;
 
         private String _injectionStatus = "";
         private System.Timers.Timer processCheckTimer;
+        private System.Timers.Timer updateCheckTimer;
 
         String InjectionStatus
         {
@@ -207,7 +210,14 @@ namespace BakkesModInjector
 
         void checkForUpdates()
         {
-            InjectionStatus = StatusStrings.CHECKING_FOR_UPDATES;
+            if (IsSafeToInject())
+            {
+                InjectionStatus = StatusStrings.CHECKING_FOR_UPDATES;
+            }
+            else
+            {
+                InjectionStatus = "Mod out of date, waiting for update...\nDisable safe mode you still want to try injection";
+            }
             
             string versionFile = bakkesModDirectory + "\\" + "version.txt";
             string versionText = "0";
@@ -221,19 +231,30 @@ namespace BakkesModInjector
             }
             Updater u = new Updater(versionText);
             UpdateResult res = u.CheckForUpdates();
-            if(u.IsBlocked())
+            string newSafe = u.GetSafeVersion();
+
+            if (u.IsBlocked())
             {
                 MessageBox.Show("Access denied, contact the developer");
                 Application.Exit();
             }
-            if(res == UpdateResult.ServerOffline)
+            if (res == UpdateResult.ServerOffline)
             {
                 MessageBox.Show("Could not connect to update server.");
-            } else if(res == UpdateResult.UpToDate)
+            }
+            else if (res == UpdateResult.UpToDate)
             {
                 //Do nothing
+
+            } else if (!newSafe.Equals(safeVersion))
+            {
+                safeVersion = newSafe;
+                if (!processCheckTimer.Enabled)
+                {
+                    processCheckTimer.Start();
+                }
             }
-            else if(res == UpdateResult.UpdateAvailable)
+            else if (res == UpdateResult.UpdateAvailable)
             {
                 if (isFirstRun)
                 {
@@ -246,7 +267,8 @@ namespace BakkesModInjector
                     updater.RunWorkerAsync();
                     return;
                 }
-                else {
+                else
+                {
                     DialogResult dialogResult = MessageBox.Show("An update is available. \r\nMessage: " + u.GetUpdateMessage() + "\r\nWould you like to update?", "Update", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
@@ -265,18 +287,48 @@ namespace BakkesModInjector
                     }
                 }
             }
-            processCheckTimer.Start();
+            if (IsSafeToInject() || res == UpdateResult.UpdateAvailable)
+            {
+                processCheckTimer.Start();
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             processCheckTimer = new System.Timers.Timer(2000);
             processCheckTimer.Elapsed += new ElapsedEventHandler(timer_Tick);
+
+            updateCheckTimer = new System.Timers.Timer(10000);
+            updateCheckTimer.Elapsed += new ElapsedEventHandler(updater_Tick);
             checkForInstall();
+        }
+
+        private void updater_Tick(object sender, EventArgs e)
+        {
+            checkForUpdates();
+
+            updateCheckTimer.Interval = Math.Min(updateCheckTimer.Interval * 2, 120000);
+        }
+
+        private bool IsSafeToInject()
+        {
+            string version = RLLauncher.GetRocketLeagueSteamVersion(rocketLeagueDirectory + "/../../");
+            return version.Equals(safeVersion) || !enableSafeModeToolStripMenuItem.Checked;
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            
+            if (!IsSafeToInject())
+            {
+                    processCheckTimer.Stop();
+                    updateCheckTimer.Interval = 10000;
+                    updateCheckTimer.Start();
+                    MessageBox.Show("Rocket League version and BakkesMod version don't match up. Please disable safe mode if you still want to inject or wait for an update.");
+                    InjectionStatus = "Mod out of date, waiting for update...\nDisable safe mode you still want to try injection";
+                    return;
+            }
+            //
             doInjections();
         }
 
@@ -353,6 +405,9 @@ namespace BakkesModInjector
             RegistryKey keys = Registry.CurrentUser.OpenSubKey(REGISTRY_CURRENTUSER_BASE_DIR, true);
             int? val = (int?)keys.GetValue("HideOnMinimize");
             SetHideWhenMinimized(val != 0x00);
+
+            int? val2 = (int?)keys.GetValue("EnableSafeMode");
+            SetEnableSafeMode(val2 != 0x00);
         }
 
         void SetRunOnStartup(bool runOnStartup)
@@ -374,10 +429,28 @@ namespace BakkesModInjector
             keys.SetValue("HideOnMinimize", hideWhenMinimized, RegistryValueKind.DWord);
         }
 
+        void SetEnableSafeMode(bool enableSafeMode)
+        {
+            enableSafeModeToolStripMenuItem.Checked = enableSafeMode;
+            RegistryKey keys = Registry.CurrentUser.OpenSubKey(REGISTRY_CURRENTUSER_BASE_DIR, true);
+            keys.SetValue("EnableSafeMode", enableSafeMode, RegistryValueKind.DWord);
+            if(enableSafeMode)
+            {
+                updateCheckTimer.Start();
+                
+            }
+            else if(updateCheckTimer.Enabled)
+            {
+                updateCheckTimer.Stop();
+                processCheckTimer.Start();
+            }
+        }
+
         private void runOnStartupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             SetRunOnStartup(!item.Checked);
+
         }
 
         private void hideWhenMinimizedToolStripMenuItem_Click(object sender, EventArgs e)
@@ -496,6 +569,18 @@ namespace BakkesModInjector
         {
             
             downloadProgressBar.Invoke((Action)(() => downloadProgressBar.Value = e.ProgressPercentage));
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Not yet implemented");
+        }
+
+        private void enableSafeModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            SetEnableSafeMode(!item.Checked);
+            processCheckTimer.Start();
         }
     }
 

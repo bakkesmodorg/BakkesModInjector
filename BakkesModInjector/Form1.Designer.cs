@@ -38,8 +38,9 @@
             this.downloadProgressBar = new System.Windows.Forms.ProgressBar();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reinstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBakkesModFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.installPythonSupportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reinstallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.linksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bakkesModWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,8 +48,9 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideWhenMinimizedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.installPythonSupportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableSafeModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,7 +96,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.linksToolStripMenuItem,
-            this.settingsToolStripMenuItem});
+            this.settingsToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(296, 24);
@@ -104,20 +107,13 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openBakkesModFolderToolStripMenuItem,
             this.installPythonSupportToolStripMenuItem,
             this.reinstallToolStripMenuItem,
-            this.openBakkesModFolderToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
-            // 
-            // reinstallToolStripMenuItem
-            // 
-            this.reinstallToolStripMenuItem.Name = "reinstallToolStripMenuItem";
-            this.reinstallToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.reinstallToolStripMenuItem.Text = "Reinstall";
-            this.reinstallToolStripMenuItem.Click += new System.EventHandler(this.reinstallToolStripMenuItem_Click);
             // 
             // openBakkesModFolderToolStripMenuItem
             // 
@@ -125,6 +121,20 @@
             this.openBakkesModFolderToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.openBakkesModFolderToolStripMenuItem.Text = "Open BakkesMod folder";
             this.openBakkesModFolderToolStripMenuItem.Click += new System.EventHandler(this.openBakkesModFolderToolStripMenuItem_Click);
+            // 
+            // installPythonSupportToolStripMenuItem
+            // 
+            this.installPythonSupportToolStripMenuItem.Name = "installPythonSupportToolStripMenuItem";
+            this.installPythonSupportToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.installPythonSupportToolStripMenuItem.Text = "Install python support";
+            this.installPythonSupportToolStripMenuItem.Click += new System.EventHandler(this.installPythonSupportToolStripMenuItem_Click);
+            // 
+            // reinstallToolStripMenuItem
+            // 
+            this.reinstallToolStripMenuItem.Name = "reinstallToolStripMenuItem";
+            this.reinstallToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.reinstallToolStripMenuItem.Text = "Reinstall";
+            this.reinstallToolStripMenuItem.Click += new System.EventHandler(this.reinstallToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -159,6 +169,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enableSafeModeToolStripMenuItem,
             this.runOnStartupToolStripMenuItem,
             this.hideWhenMinimizedToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
@@ -179,6 +190,13 @@
             this.hideWhenMinimizedToolStripMenuItem.Text = "Hide when minimized";
             this.hideWhenMinimizedToolStripMenuItem.Click += new System.EventHandler(this.hideWhenMinimizedToolStripMenuItem_Click);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
             // notifyIcon1
             // 
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
@@ -186,12 +204,12 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
-            // installPythonSupportToolStripMenuItem
+            // enableSafeModeToolStripMenuItem
             // 
-            this.installPythonSupportToolStripMenuItem.Name = "installPythonSupportToolStripMenuItem";
-            this.installPythonSupportToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.installPythonSupportToolStripMenuItem.Text = "Install python support";
-            this.installPythonSupportToolStripMenuItem.Click += new System.EventHandler(this.installPythonSupportToolStripMenuItem_Click);
+            this.enableSafeModeToolStripMenuItem.Name = "enableSafeModeToolStripMenuItem";
+            this.enableSafeModeToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.enableSafeModeToolStripMenuItem.Text = "Enable safe mode";
+            this.enableSafeModeToolStripMenuItem.Click += new System.EventHandler(this.enableSafeModeToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -237,6 +255,8 @@
         private System.Windows.Forms.ToolStripMenuItem bakkesModWebsiteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bakkesModWorkshopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem installPythonSupportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enableSafeModeToolStripMenuItem;
     }
 }
 

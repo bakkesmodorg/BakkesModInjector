@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -36,6 +37,32 @@ namespace BakkesModInjector
                 }
             }
             return returnDir;
+        }
+
+        public static string GetRocketLeagueSteamVersion(String path)
+        {
+            string appinfo = path + "\\appinfo.vdf";
+            string version = "0";
+            string pattern = "(\"([^ \"]|\"\")*\")";
+
+            if (File.Exists(appinfo))
+            {
+                string line;
+                using (FileStream stream = File.Open(appinfo, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    System.IO.StreamReader file = new System.IO.StreamReader(stream);
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        if (line.Contains("DisplayVersion"))
+                        {
+                            version = Regex.Match(line, pattern, RegexOptions.IgnoreCase | RegexOptions.RightToLeft).Groups[1].Value.Replace("\"", "");
+                                
+                            break;
+                        }
+                    }
+                }
+            }
+            return version;
         }
 
         void Launch()
