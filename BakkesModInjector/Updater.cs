@@ -37,7 +37,7 @@ namespace BakkesModInjector
                 {
                     //wc.DownloadFile(UPDATE_URL + _currentVersion + "/", "test.txt");
                     wc.Proxy = null;
-                    wc.Headers.Add("user-agent", "BakkesMod Updater (1.0) Skis");
+                    wc.Headers.Add("user-agent", "BakkesMod Updater (2.0)");
                     string fullUrl = UPDATE_URL + _currentVersion + "/";
                     var json = wc.DownloadString(fullUrl);
                     

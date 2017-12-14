@@ -126,12 +126,14 @@ namespace BakkesModInjector
 
         private static readonly string REGISTRY_CURRENTUSER_BASE_DIR    = @"Software\BakkesMod";
         private static readonly string REGISTRY_BASE_DIR                = @"HKEY_CURRENT_USER\SOFTWARE\BakkesMod\AppPath";
+        private static readonly string APPLICATION_NAME                 = "BakkesMod";
+        private static readonly string REGISTRY_RUN                     = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
         private static readonly string REGISTRY_ROCKET_LEAGUE_PATH      = "RocketLeaguePath";
         private static readonly string REGISTRY_BAKKESMOD_PATH          = "BakkesModPath";
 
         void install()
         {
-            string filePath = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\rocketleague\\Binaries\\Win32\\RocketLeague.exe";
+            string filePath = RLLauncher.GetRocketLeagueDirFromLog() + "RocketLeague.exe";
 
             if (!File.Exists(filePath))
             {
@@ -344,6 +346,106 @@ namespace BakkesModInjector
         private void Form1_Shown(object sender, EventArgs e)
         {
             checkForUpdates();
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey(REGISTRY_RUN, true);
+            
+            SetRunOnStartup(isFirstRun || !rk.GetValue(APPLICATION_NAME, "Ex").Equals("Ex")); //|| !rk.GetValue(APPLICATION_NAME, Application.ExecutablePath.ToString()).Equals(Application.ExecutablePath.ToString())
+
+            RegistryKey keys = Registry.CurrentUser.OpenSubKey(REGISTRY_CURRENTUSER_BASE_DIR, true);
+            int? val = (int?)keys.GetValue("HideOnMinimize");
+            SetHideWhenMinimized(val != 0x00);
+        }
+
+        void SetRunOnStartup(bool runOnStartup)
+        {
+            runOnStartupToolStripMenuItem.Checked = runOnStartup;
+
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey(REGISTRY_RUN, true);
+
+            if (runOnStartup)
+                rk.SetValue(APPLICATION_NAME, Application.ExecutablePath.ToString());
+            else
+                rk.DeleteValue(APPLICATION_NAME, false);
+        }
+
+        void SetHideWhenMinimized(bool hideWhenMinimized)
+        {
+            hideWhenMinimizedToolStripMenuItem.Checked = hideWhenMinimized;
+            RegistryKey keys = Registry.CurrentUser.OpenSubKey(REGISTRY_CURRENTUSER_BASE_DIR, true);
+            keys.SetValue("HideOnMinimize", hideWhenMinimized, RegistryValueKind.DWord);
+        }
+
+        private void runOnStartupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            SetRunOnStartup(!item.Checked);
+        }
+
+        private void hideWhenMinimizedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            SetHideWhenMinimized(!item.Checked);
+
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (hideWhenMinimizedToolStripMenuItem.Checked)
+            {
+                if (FormWindowState.Minimized == this.WindowState)
+                {
+                    notifyIcon1.Visible = true;
+                    notifyIcon1.BalloonTipText = "BakkesMod will stay active when minimized";
+                    notifyIcon1.ShowBalloonTip(500);
+                    notifyIcon1.ContextMenuStrip = menuStrip1.ContextMenuStrip;
+                    this.Hide();
+                }
+
+                else if (FormWindowState.Normal == this.WindowState)
+                {
+                    notifyIcon1.Visible = false;
+                }
+            }
+        }
+
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+
+
+        private void exitToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void reinstallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("This will fully remove all bakkesmod files, are you sure you want to continue?", "Confirm reinstall", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                string bakkesModDirectory = rocketLeagueDirectory + "bakkesmod\\";
+                if (Directory.Exists(bakkesModDirectory))
+                {
+                    Directory.Delete(bakkesModDirectory, true);
+                }
+                checkForInstall();
+                checkForUpdates();
+                isFirstRun = false;
+            }
+        }
+
+        private void openBakkesModFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string bakkesModDirectory = rocketLeagueDirectory + "bakkesmod\\";
+            if (Directory.Exists(bakkesModDirectory))
+            {
+                Process.Start(bakkesModDirectory);
+            } else
+            {
+                MessageBox.Show("BakkesMod folder does not exist. (Did you delete it?)");
+            }
         }
     }
 
