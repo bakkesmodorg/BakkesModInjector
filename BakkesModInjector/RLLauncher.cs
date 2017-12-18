@@ -12,7 +12,7 @@ namespace BakkesModInjector
 {
     class RLLauncher
     {
-
+        //Steam\|([0-9]{15,19})\|
         public static string GetRocketLeagueDirFromLog()
         {
             //Init: Base directory: 

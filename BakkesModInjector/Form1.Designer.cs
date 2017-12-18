@@ -46,11 +46,11 @@
             this.bakkesModWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bakkesModWorkshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableSafeModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideWhenMinimizedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.enableSafeModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -176,6 +176,13 @@
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
+            // enableSafeModeToolStripMenuItem
+            // 
+            this.enableSafeModeToolStripMenuItem.Name = "enableSafeModeToolStripMenuItem";
+            this.enableSafeModeToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.enableSafeModeToolStripMenuItem.Text = "Enable safe mode";
+            this.enableSafeModeToolStripMenuItem.Click += new System.EventHandler(this.enableSafeModeToolStripMenuItem_Click);
+            // 
             // runOnStartupToolStripMenuItem
             // 
             this.runOnStartupToolStripMenuItem.Name = "runOnStartupToolStripMenuItem";
@@ -204,13 +211,6 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
-            // enableSafeModeToolStripMenuItem
-            // 
-            this.enableSafeModeToolStripMenuItem.Name = "enableSafeModeToolStripMenuItem";
-            this.enableSafeModeToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.enableSafeModeToolStripMenuItem.Text = "Enable safe mode";
-            this.enableSafeModeToolStripMenuItem.Click += new System.EventHandler(this.enableSafeModeToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,6 +226,7 @@
             this.Text = "BakkesMod";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

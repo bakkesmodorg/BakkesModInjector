@@ -55,7 +55,7 @@ namespace BakkesModInjector
 
         void injectDLL()
         {
-            DLLInjectionResult result = DllInjector.Instance.Inject("RocketLeague", bakkesModDirectory + "\\" + "bakkesmod.dll");
+            DLLInjectionResult result = DllInjector.Instance.Inject("RocketLeague", bakkesModDirectory + "" + "bakkesmod.dll");
             switch (result)
             {
                 case DLLInjectionResult.DLL_NOT_FOUND:
@@ -89,7 +89,6 @@ namespace BakkesModInjector
                 injectDLL();
                 injectNextTick = false;
                 processCheckTimer.Interval = 2000;
-                
             }
             else if (isRunning)
             {
@@ -246,14 +245,7 @@ namespace BakkesModInjector
             {
                 //Do nothing
 
-            } else if (!newSafe.Equals(safeVersion))
-            {
-                safeVersion = newSafe;
-                if (!processCheckTimer.Enabled)
-                {
-                    processCheckTimer.Start();
-                }
-            }
+            } 
             else if (res == UpdateResult.UpdateAvailable)
             {
                 if (isFirstRun)
@@ -287,9 +279,16 @@ namespace BakkesModInjector
                     }
                 }
             }
-            if (IsSafeToInject() || res == UpdateResult.UpdateAvailable)
+            if (!newSafe.Equals(safeVersion))
             {
-                processCheckTimer.Start();
+                safeVersion = newSafe;
+            }
+            if (IsSafeToInject() || res == UpdateResult.UpdateAvailable || !newSafe.Equals(safeVersion))
+            {
+                if (!processCheckTimer.Enabled)
+                {
+                    processCheckTimer.Start();
+                }
             }
         }
 
@@ -581,6 +580,15 @@ namespace BakkesModInjector
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             SetEnableSafeMode(!item.Checked);
             processCheckTimer.Start();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.F1)
+            {
+                bakkesModDirectory = @"F:\Bakkesmod\development\BakkesMod-rewrite\Release\";
+                MessageBox.Show("BakkesModDirectory set to release");
+            }
         }
     }
 
