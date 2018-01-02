@@ -406,7 +406,7 @@ namespace BakkesModInjector
             SetHideWhenMinimized(val != 0x00);
 
             int? val2 = (int?)keys.GetValue("EnableSafeMode");
-            SetEnableSafeMode(val2 != 0x00);
+            SetEnableSafeMode(val2 == 0x01);
         }
 
         void SetRunOnStartup(bool runOnStartup)
@@ -588,6 +588,13 @@ namespace BakkesModInjector
             {
                 bakkesModDirectory = @"F:\Bakkesmod\development\BakkesMod-rewrite\Release\";
                 MessageBox.Show("BakkesModDirectory set to release");
+            } else
+            {
+                if (e.KeyCode == Keys.F2)
+                {
+                    bakkesModDirectory = @"F:\Bakkesmod\development\BakkesMod-rewrite\Debug\";
+                    MessageBox.Show("BakkesModDirectory set to debug");
+                }
             }
         }
     }

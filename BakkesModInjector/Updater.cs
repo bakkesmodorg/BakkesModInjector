@@ -70,7 +70,7 @@ namespace BakkesModInjector
 
         public bool IsBlocked()
         {
-            return (latestResult["blocked"] != null && (bool)latestResult["blocked"]);
+            return (latestResult != null && latestResult["blocked"] != null && (bool)latestResult["blocked"]);
         }
 
     }
