@@ -51,6 +51,8 @@
             this.hideWhenMinimizedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.noGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -171,7 +173,8 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.enableSafeModeToolStripMenuItem,
             this.runOnStartupToolStripMenuItem,
-            this.hideWhenMinimizedToolStripMenuItem});
+            this.hideWhenMinimizedToolStripMenuItem,
+            this.noGUIToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -207,9 +210,21 @@
             // notifyIcon1
             // 
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Text = "Bakkesmod";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // noGUIToolStripMenuItem
+            // 
+            this.noGUIToolStripMenuItem.Name = "noGUIToolStripMenuItem";
+            this.noGUIToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.noGUIToolStripMenuItem.Text = "No GUI";
+            this.noGUIToolStripMenuItem.Click += new System.EventHandler(this.noGUIToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -258,6 +273,8 @@
         private System.Windows.Forms.ToolStripMenuItem installPythonSupportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enableSafeModeToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem noGUIToolStripMenuItem;
     }
 }
 

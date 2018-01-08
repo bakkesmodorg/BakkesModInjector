@@ -19,6 +19,9 @@ namespace BakkesModInjector
 {
     public partial class Form1 : Form
     {
+        public static readonly int UPDATER_VERSION = 1;
+
+        private bool isUpdatingInjector = false;
         private bool isFirstRun = false;
         private Object injectionLock = new Object();
         Boolean isInjected = false;
@@ -209,6 +212,8 @@ namespace BakkesModInjector
 
         void checkForUpdates()
         {
+            if(isUpdatingInjector)
+                return;
             if (IsSafeToInject())
             {
                 InjectionStatus = StatusStrings.CHECKING_FOR_UPDATES;
@@ -231,6 +236,17 @@ namespace BakkesModInjector
             Updater u = new Updater(versionText);
             UpdateResult res = u.CheckForUpdates();
             string newSafe = u.GetSafeVersion();
+
+            if(u.GetUpdaterVersion() > UPDATER_VERSION)
+            {
+                DialogResult dialogResult = MessageBox.Show("An update for the injector is available. \r\nWould you like to update?", "Update", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    InjectorUpdater.UpdateInjector(u);
+                    isUpdatingInjector = true;
+                    return;
+                }
+            }
 
             if (u.IsBlocked())
             {
@@ -311,7 +327,7 @@ namespace BakkesModInjector
 
         private bool IsSafeToInject()
         {
-            string version = RLLauncher.GetRocketLeagueSteamVersion(rocketLeagueDirectory + "/../../");
+            string version = RLLauncher.GetRocketLeagueSteamVersion(rocketLeagueDirectory + "/../../../../");
             return version.Equals(safeVersion) || !enableSafeModeToolStripMenuItem.Checked;
         }
 
@@ -324,7 +340,8 @@ namespace BakkesModInjector
                     updateCheckTimer.Interval = 10000;
                     updateCheckTimer.Start();
                     MessageBox.Show("Rocket League version and BakkesMod version don't match up. Please disable safe mode if you still want to inject or wait for an update.");
-                    InjectionStatus = "Mod out of date, waiting for update...\nDisable safe mode you still want to try injection";
+                    InjectionStatus = "Mod out of date, waiting for update...\nDisable safe mode y" +
+                    "ou still want to try injection";
                     return;
             }
             //
@@ -407,6 +424,8 @@ namespace BakkesModInjector
 
             int? val2 = (int?)keys.GetValue("EnableSafeMode");
             SetEnableSafeMode(val2 == 0x01);
+
+            SetNoGUI(File.Exists(bakkesModDirectory + "\\nogui.txt"));
         }
 
         void SetRunOnStartup(bool runOnStartup)
@@ -596,6 +615,36 @@ namespace BakkesModInjector
                     MessageBox.Show("BakkesModDirectory set to debug");
                 }
             }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+
+        void SetNoGUI(bool noGui)
+        {
+            if(!noGui)
+            {
+                if(File.Exists(bakkesModDirectory + "\\nogui.txt"))
+                {
+                    File.Delete(bakkesModDirectory + "\\nogui.txt");
+                }
+            }
+            else
+            {
+                if(!File.Exists(bakkesModDirectory + "\\nogui.txt"))
+                {
+                    File.Create(bakkesModDirectory + "\\nogui.txt");
+                }
+            }
+            noGUIToolStripMenuItem.Checked = noGui;
+        }
+        private void noGUIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            SetNoGUI(!item.Checked);
         }
     }
 

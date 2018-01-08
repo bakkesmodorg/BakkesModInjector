@@ -41,7 +41,7 @@ namespace BakkesModInjector
 
         public static string GetRocketLeagueSteamVersion(String path)
         {
-            string appinfo = path + "\\appinfo.vdf";
+            string appinfo = path + "\\appmanifest_252950.acf";
             string version = "0";
             string pattern = "(\"([^ \"]|\"\")*\")";
 
@@ -53,7 +53,7 @@ namespace BakkesModInjector
                     System.IO.StreamReader file = new System.IO.StreamReader(stream);
                     while ((line = file.ReadLine()) != null)
                     {
-                        if (line.Contains("DisplayVersion"))
+                        if (line.Contains("buildid"))
                         {
                             version = Regex.Match(line, pattern, RegexOptions.IgnoreCase | RegexOptions.RightToLeft).Groups[1].Value.Replace("\"", "");
                                 

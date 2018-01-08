@@ -21,6 +21,7 @@ namespace BakkesModInjector
         private static readonly string UPDATE_URL = "http://149.210.150.107/updater/";
         private string _currentVersion;
         private JObject latestResult = null;
+
         public Updater(string currentVersion)
         {
             _currentVersion = currentVersion;
@@ -37,7 +38,7 @@ namespace BakkesModInjector
                 {
                     //wc.DownloadFile(UPDATE_URL + _currentVersion + "/", "test.txt");
                     wc.Proxy = null;
-                    wc.Headers.Add("user-agent", "BakkesMod Updater (2.0)");
+                    wc.Headers.Add("user-agent", "BakkesMod Updater (" + Form1.UPDATER_VERSION + ")");
                     string fullUrl = UPDATE_URL + _currentVersion + "/";
                     var json = wc.DownloadString(fullUrl);
                     
@@ -63,9 +64,19 @@ namespace BakkesModInjector
             return (String)((JObject)latestResult["update_info"])["download_url"];
         }
 
+        public int GetUpdaterVersion()
+        {
+            return (latestResult != null && latestResult["injector"] != null && latestResult["injector"]["injectorversion"] != null) ? (int)latestResult["injector"]["injectorversion"] : 9999;
+        }
+
+        public String GetInjectorUpdateURL()
+        {
+            return (latestResult != null && latestResult["injector"] != null && latestResult["injector"]["injectorurl"] != null) ? (String)latestResult["injector"]["injectorurl"] : "";
+        }
+
         public String GetSafeVersion()
         {
-            return "171122.51667.178784";
+            return (latestResult != null && latestResult["gameinfo"] != null && latestResult["gameinfo"]["buildid"] != null) ? (String)latestResult["gameinfo"]["buildid"] : "";
         }
 
         public bool IsBlocked()
