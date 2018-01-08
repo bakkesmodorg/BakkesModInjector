@@ -19,7 +19,7 @@ namespace BakkesModInjector
 {
     public partial class Form1 : Form
     {
-        public static readonly int UPDATER_VERSION = 1;
+        public static readonly int UPDATER_VERSION = 3;
 
         private bool isUpdatingInjector = false;
         private bool isFirstRun = false;
@@ -242,8 +242,10 @@ namespace BakkesModInjector
                 DialogResult dialogResult = MessageBox.Show("An update for the injector is available. \r\nWould you like to update?", "Update", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
+                    InjectionStatus = "Updating the injector... Please wait";
                     InjectorUpdater.UpdateInjector(u);
                     isUpdatingInjector = true;
+                    updateCheckTimer.Stop();
                     return;
                 }
             }
@@ -260,7 +262,7 @@ namespace BakkesModInjector
             else if (res == UpdateResult.UpToDate)
             {
                 //Do nothing
-
+                updateCheckTimer.Stop();
             } 
             else if (res == UpdateResult.UpdateAvailable)
             {
@@ -273,6 +275,7 @@ namespace BakkesModInjector
                     downloadUpdateUrl = u.GetUpdateURL();
                     InjectionStatus = StatusStrings.DOWNLOADING_UPDATE;
                     updater.RunWorkerAsync();
+                    updateCheckTimer.Stop();
                     return;
                 }
                 else
@@ -287,12 +290,15 @@ namespace BakkesModInjector
                         downloadUpdateUrl = u.GetUpdateURL();
                         InjectionStatus = StatusStrings.DOWNLOADING_UPDATE;
                         updater.RunWorkerAsync();
+                        updateCheckTimer.Stop();
                         return;
                     }
                     else if (dialogResult == DialogResult.No)
                     {
+                        updateCheckTimer.Stop();
                         MessageBox.Show("Alright. The tool might be broken now though. Updating is recommended!");
                     }
+                    
                 }
             }
             if (!newSafe.Equals(safeVersion))
@@ -645,6 +651,42 @@ namespace BakkesModInjector
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             SetNoGUI(!item.Checked);
+        }
+
+        private void checkInjectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool isRunning = false;
+            bool isInjected = false;
+            Process[] processes = Process.GetProcesses();
+            foreach (Process p in processes)
+            {
+                
+                if (p.ProcessName == "RocketLeague")
+                {
+                    isRunning = true;
+                    foreach (ProcessModule module in p.Modules)
+                    {
+                        if(module.ModuleName.Equals("bakkesmod.dll"))
+                        {
+                            isInjected = true;
+
+                        }
+                    }
+                    break;   
+                }
+            }
+            if(!isRunning)
+            {
+                MessageBox.Show("Rocket league is not running, cannot check status");
+                return;
+            }
+            if(!isInjected)
+            {
+                MessageBox.Show("Could not find the bakkesmod.dll in the Rocket League process.");
+                return;
+            }
+            MessageBox.Show("Injection works!");
+           
         }
     }
 

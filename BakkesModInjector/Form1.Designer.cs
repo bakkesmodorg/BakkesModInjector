@@ -49,10 +49,11 @@
             this.enableSafeModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideWhenMinimizedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkInjectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.noGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -200,12 +201,27 @@
             this.hideWhenMinimizedToolStripMenuItem.Text = "Hide when minimized";
             this.hideWhenMinimizedToolStripMenuItem.Click += new System.EventHandler(this.hideWhenMinimizedToolStripMenuItem_Click);
             // 
+            // noGUIToolStripMenuItem
+            // 
+            this.noGUIToolStripMenuItem.Name = "noGUIToolStripMenuItem";
+            this.noGUIToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.noGUIToolStripMenuItem.Text = "No in-game GUI";
+            this.noGUIToolStripMenuItem.Click += new System.EventHandler(this.noGUIToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkInjectionToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // checkInjectionToolStripMenuItem
+            // 
+            this.checkInjectionToolStripMenuItem.Name = "checkInjectionToolStripMenuItem";
+            this.checkInjectionToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.checkInjectionToolStripMenuItem.Text = "Check injection";
+            this.checkInjectionToolStripMenuItem.Click += new System.EventHandler(this.checkInjectionToolStripMenuItem_Click);
             // 
             // notifyIcon1
             // 
@@ -218,13 +234,6 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // noGUIToolStripMenuItem
-            // 
-            this.noGUIToolStripMenuItem.Name = "noGUIToolStripMenuItem";
-            this.noGUIToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.noGUIToolStripMenuItem.Text = "No GUI";
-            this.noGUIToolStripMenuItem.Click += new System.EventHandler(this.noGUIToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -275,6 +284,7 @@
         private System.Windows.Forms.ToolStripMenuItem enableSafeModeToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem noGUIToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkInjectionToolStripMenuItem;
     }
 }
 
